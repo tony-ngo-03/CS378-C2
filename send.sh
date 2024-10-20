@@ -4,7 +4,7 @@ REPO_LINK="https://github.com/tony-ngo-03/CS378-C2-SR.git"
 REPO_DIR="CS378-CS-SR"
 
 # if the command repo does not exist then clone it
-if [! -d "$REPO_DIR"]; then
+if [! -d "$REPO_DIR"] ; then
     git clone $REPO_LINK
 fi
 
