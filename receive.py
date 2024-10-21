@@ -2,6 +2,7 @@ import os
 import requests
 import json
 import time
+import base64
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -35,8 +36,9 @@ def receive_output():
         content_json = json.loads(response.text)
         content_text = content_json['files']
         if 'receive.txt' in content_text:
-            if content_text['receive.txt']['content'] != "@":
-                print(content_text['receive.txt']['content'])
+            decrypted = base64.b64decode(content_text['receive.txt']['content'])
+            if decrypted != "@":
+                print(decrypted)
                 clear_receive_file()
             
 
