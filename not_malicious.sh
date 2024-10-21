@@ -1,23 +1,17 @@
 #!/bin/bash
 
-PASTEBIN_DEV_API_KEY=""
-PASTEBIN_USER_API_KEY=""
-PASTEBIN_USER_NAME=""
-PASTEBIN_USER_PASS=""
+GITHUB_API_KEY=""
+GIST_ID=""
 
 
 while true
 do
-    PASTE_LIST=$(curl -s -X POST \
-    -d "api_dev_key=$API_DEV_KEY" \
-    -d "api_user_key=$API_USER_KEY" \
-    -d "api_option=list" \
-    "https://pastebin.com/api/api_post.php")
+    GIST=$(curl -s -L \
+  -H "Accept: application/vnd.github+json" \
+  -H "Authorization: Bearer ${GITHUB_API_KEY}" \
+  -H "X-GitHub-Api-Version: 2022-11-28" \
+  https://api.github.com/gists/${GIT_ID})
 
-    echo $PASTE_LIST
+    
     sleep 1
-
-
-
-
-
+done

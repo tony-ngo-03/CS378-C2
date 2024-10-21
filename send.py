@@ -1,69 +1,32 @@
 import os
 import requests
-import xml.etree.ElementTree as ET
+import json
 from dotenv import load_dotenv
 
 load_dotenv()
 
-PASTEBIN_USERAME=os.getenv('PASTEBIN_USERNAME')
-PASTEBIN_PASSWORD=os.getenv('PASTEBIN_PASSWORD')
-PASTEBIN_DEV_API_KEY=os.getenv('PASTEBIN_DEV_API_KEY')
-PASTEBIN_USER_API_KEY=os.getenv('PASTEBIN_USER_API_KEY')
+GITHUB_API_KEY = os.getenv('GITHUB_API_KEY')
+GIST_ID = os.getenv('GIST_ID')
 
-
-def get_send_key():
-    payload={
-        'api_dev_key' : PASTEBIN_DEV_API_KEY,
-        'api_user_key' : PASTEBIN_USER_API_KEY,
-        'api_option' : 'list'
+def send_command(command):
+    headers = { "Accept": "application/vnd.github+json",
+                'Authorization': f'Bearer {GITHUB_API_KEY}',
+                "X-GitHub-Api-Version" : "2022-11-28"}
+    payload = {
+        'files' : {"send.txt" : {"content" : command }}
     }
-
-    response = requests.post("https://pastebin.com/api/api_post.php", data=payload)
-
-    if response.status_code == 200:
-        xml = ET.fromstring('<root>' + response.text + '</root>')
-        result = xml.findall(".//paste[paste_title='send']/paste_key")
-        return result[0].text if len(result) > 0 else None
-    else:
-        print("Error: not able to get pastes of user", response.status_code)
-        return None
+    response = requests.patch(f'https://api.github.com/gists/{GIST_ID}', headers=headers, data=json.dumps(payload))
     
-
-def create_send_paste(command):
-    payload = {
-        "api_dev_key" : PASTEBIN_DEV_API_KEY,
-        "api_option" : 'paste',
-        "api_paste_name" : 'send',
-        "api_paste_code" : command,
-        "api_user_key" : PASTEBIN_USER_API_KEY
-    }
-
-    response = requests.post("https://pastebin.com/api/api_post.php", data=payload)
-
     if response.status_code != 200:
-        print("ERROR CREATING PASTE", response.status_code)
-        
-def delete_paste(paste_key):
-    payload = {
-        "api_dev_key" : PASTEBIN_DEV_API_KEY,
-        "api_user_key" : PASTEBIN_USER_API_KEY,
-        "api_paste_key" : paste_key,
-        "api_option" : 'delete'
-    }
+        print("Failure, ", response.status_code)
+        print(response.text)
 
-    response = requests.post("https://pastebin.com/api/api_post.php", data=payload)
-    return response.status_code == 200
-
-def send_command():
-    while True:
-        command = input("command: ")
-        send_paste_key = get_send_key()
-        if send_paste_key != None:
-            delete_paste(send_paste_key)
-        create_send_paste(command)
     
 if __name__ == "__main__":
-    send_command()
+    while True:
+        command = input("")
+        send_command(command)
+
 
 
     
