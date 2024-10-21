@@ -36,7 +36,7 @@ def receive_output():
         content_json = json.loads(response.text)
         content_text = content_json['files']
         if 'receive.txt' in content_text:
-            decrypted = base64.b64decode(content_text['receive.txt']['content'])
+            decrypted = base64.b64decode(content_text['receive.txt']['content']).decode('utf-8')
             if decrypted != "@":
                 print(decrypted)
                 clear_receive_file()
