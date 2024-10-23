@@ -36,7 +36,7 @@ do
       -H "Authorization: Bearer ${GITHUB_API_KEY}" \
       -H "X-GitHub-Api-Version: 2022-11-28" \
       https://api.github.com/gists/${GIST_ID} \
-      -d '{"files":{"send.txt":{"content":"@"}}}'
+      -d '{"files":{"send.txt":{"content":"QA=="}}}'
 
       # output command to correct file
       curl -s -o /dev/null -L \
