@@ -1,5 +1,6 @@
 #!/bin/bash
 
+sleep 10
 GITHUB_API_KEY=""
 GIST_ID=""
 ETAG=""
